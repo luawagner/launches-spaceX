@@ -1,0 +1,22 @@
+---
+import CardLaunches from "./CardLaunches.astro"
+import { getLatestsLaunches } from "../services/spaceX";
+
+//extraemos los launches de la función con await pq es asíncrona
+const launches = await getLatestsLaunches()
+---
+
+<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+    {
+        launches.map(({ id, links, details, flight_number: flightNumber, success }) => 
+       //Desestructuramos launch y pedimos solo los elementos que vamos a usar.
+        <CardLaunches
+       id={id}
+       img={links.patch.small}
+       details={details}
+       flightNumber={flightNumber}
+       success={success} />
+        )
+    }
+</div>
+

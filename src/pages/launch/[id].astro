@@ -1,0 +1,35 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getLatestsLaunches, getLaunchById } from "../../services/spaceX";
+import Layout from "../../layouts/Layout.astro";
+
+const { id } = Astro.params
+
+let launch
+if (id) {
+    launch = await getLaunchById({id})
+}
+//generamos las rutas dinámicas, pasándole la id al staticPath
+//pedimos los launches, los recorremos 
+//por cada uno imprimimos un objeto con params y el id.
+//así generamos los paths de manera dinámica
+export async function getStaticPaths () {
+ const launches = await getLatestsLaunches()
+ return launches.map((launch) => ({
+    params: { id: launch.id },
+ }))
+    
+}
+
+---
+<Layout title={`Launch # ${id}`}>
+<article class="flex gap-y-4 flex-col">
+    <img class="w-52 h-auto"
+    src={launch?.links?.patch.small}
+    alt={launch?.name}
+    />
+    <h2 class="text-white text-4xl font-bold">
+        Launch #{launch?.flight_number}</h2>
+    <p class="text-white text-lg">{launch?.details}</p>
+</article>
+</Layout>
